@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import './App.css';
 import ButtonAppBar from './ButtonAppBar.js';
-import Layout from './Layout.js';
+import ScreenLoader from './ScreenLoader.js';
 
 class App extends Component {
 
@@ -31,7 +31,7 @@ class App extends Component {
     return (
       <div className="App">
         <ButtonAppBar></ButtonAppBar>
-        <Layout socket={this.socket} appState={this.state} setRootState={this.setRootState} />
+        <ScreenLoader socket={this.socket} appState={this.state} setRootState={this.setRootState} />
       </div>
     );
   }

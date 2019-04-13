@@ -4,8 +4,7 @@ import Landing from './screens/Landing.js';
 import Waiting from './screens/Waiting.js';
 import SharedNumbers from './screens/SharedNumbers.js';
 
-
-class Layout extends Component {
+class ScreenLoader extends Component {
 
   constructor(props) {
     super(props);
@@ -34,4 +33,4 @@ class Layout extends Component {
   }
 }
 
-export default Layout;
+export default ScreenLoader;
