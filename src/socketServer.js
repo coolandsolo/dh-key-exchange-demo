@@ -40,4 +40,10 @@ io.on('connection', function (socket) {
 
     io.emit('connection update', { id: socket.id, all: clients, action: 'remove' });
   });
+
+  socket.on('name set', function (msg) {
+    console.log('name set', msg);
+    io.emit('name set', msg);
+  });
+
 });
