@@ -30,8 +30,6 @@ class ScreenLanding extends Component {
 
     return (
       <div>
-        {/* ScreenLanding: {socketId} */}
-        My Name Is: {name} <br />
         <TextField id="Name" label="Name" helperText={'Enter a name for "' + labels[i]+'"'} margin="normal"
           onChange={this.handleChange('Name')} />
 
