@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
 import Grid from '@material-ui/core/Grid';
-import Landing from './screens/Landing.js';
-import Waiting from './screens/Waiting.js';
-import SharedNumbers from './screens/SharedNumbers.js';
+import Landing from './layout/screens/Landing.js';
+import Waiting from './layout/screens/Waiting.js';
+import SharedNumbers from './layout/screens/SharedNumbers.js';
 
 class ScreenLoader extends Component {
 

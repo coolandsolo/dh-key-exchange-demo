@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import './App.css';
-import ButtonAppBar from './ButtonAppBar.js';
-import ScreenLoader from './ScreenLoader.js';
+import ButtonAppBar from './layout/partials/ButtonAppBar';
+import ScreenLoader from './ScreenLoader';
 
 class App extends Component {
 
