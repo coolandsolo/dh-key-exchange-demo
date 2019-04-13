@@ -1,5 +1,6 @@
 var getSocket = (appState, setRootState) => {
-  var socket = require('socket.io-client')('http://184.75.224.246:6300/');
+  console.log('SOCKET_SERVER',process.env.REACT_APP_SOCKET_SERVER);
+  var socket = require('socket.io-client')('http://' + process.env.REACT_APP_SOCKET_SERVER + '/');
 
   socket.on('connect', function () {
     setRootState({

@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
 // import Grid from '@material-ui/core/Grid';
-import TextField from '@material-ui/core/TextField';
+// import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
 
-class ScreenLanding extends Component {
+class SharedNumbers extends Component {
 
   constructor(props) {
     super(props);
@@ -24,19 +24,18 @@ class ScreenLanding extends Component {
   };
 
   render() {
-    let { socketId, socketIds, name } = this.props.appState;
-    let i = socketIds ? socketIds.indexOf(socketId) : 0;
-    let labels = ['Bob', 'Alice', 'Eve'];
+    // let { socketId, socketIds, name } = this.props.appState;
 
     return (
       <div>
-        <TextField id="Name" label="Name" helperText={'Enter a name for "' + labels[i]+'"'} margin="normal"
-          onChange={this.handleChange('Name')} />
-
-        <Button variant="contained" color="primary" className="next" onClick={this.setName}>Next</Button>
+        Agreed upon shared numbers<br />
+        Prime: <strong>0</strong><br />
+        Generator: <strong>0</strong>
+        <br /><br />
+        <Button variant="contained" color="primary" className="next">Next</Button>
       </div>
     );
   }
 }
 
-export default ScreenLanding;
+export default SharedNumbers;

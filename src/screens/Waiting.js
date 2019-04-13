@@ -2,8 +2,7 @@ import React, { Component } from 'react';
 // import Grid from '@material-ui/core/Grid';
 import LinearProgress from '@material-ui/core/LinearProgress';
 
-class ScreenWaiting extends Component {
-
+class Waiting extends Component {
 
   render() {
     const { waitText } = this.props;
@@ -18,4 +17,4 @@ class ScreenWaiting extends Component {
   }
 }
 
-export default ScreenWaiting;
+export default Waiting;
