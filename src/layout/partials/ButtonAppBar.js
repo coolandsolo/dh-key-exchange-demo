@@ -14,6 +14,7 @@ const styles = {
   },
   grow: {
     flexGrow: 1,
+    fontWeight: 300,
   },
   menuButton: {
     marginLeft: -12,
@@ -22,19 +23,26 @@ const styles = {
 };
 
 function ButtonAppBar(props) {
+  const { classes, setRootState } = props;
+
   let refreshPage = () => {
     window.location.reload();
   }
 
-  const { classes } = props;
+  let toggleSettings = () => {
+    setRootState({
+      drawer: true
+    });
+  }
+
   return (
     <div className={classes.root}>
       <AppBar position="static">
         <Toolbar>
-          <IconButton className={classes.menuButton} color="inherit" aria-label="Menu">
+          <IconButton className={classes.menuButton} color="inherit" aria-label="Menu" onClick={toggleSettings}>
             <MenuIcon />
           </IconButton>
-          <Typography variant="h6" color="inherit" className={classes.grow}>
+          <Typography variant="h6" color="inherit" align="left" className={classes.grow}>
             Diffie-Hellman Key Exchange Demo Application
           </Typography>
           <Button color="inherit" onClick={refreshPage}>Reload</Button>

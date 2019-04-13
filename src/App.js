@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import './App.css';
 import ButtonAppBar from './layout/partials/ButtonAppBar';
+import SettingsDrawer from './layout/partials/SettingsDrawer';
 import ScreenLoader from './ScreenLoader';
 
 class App extends Component {
@@ -12,7 +13,8 @@ class App extends Component {
       socketIds: null,
       name: '',
       sessions: [],
-      mode: 'NORMAL' //NORMAL|MITMA
+      mode: 'NORMAL', //NORMAL|MITMA
+      drawer: false,
     };
 
     this.socket = null;
@@ -30,7 +32,8 @@ class App extends Component {
   render() {
     return (
       <div className="App">
-        <ButtonAppBar></ButtonAppBar>
+        <ButtonAppBar setRootState={this.setRootState}></ButtonAppBar>
+        <SettingsDrawer drawerState={this.state.drawer} setRootState={this.setRootState}></SettingsDrawer>
         <ScreenLoader socket={this.socket} appState={this.state} setRootState={this.setRootState} />
       </div>
     );
