@@ -22,6 +22,10 @@ const styles = {
 };
 
 function ButtonAppBar(props) {
+  let refreshPage = () => {
+    window.location.reload();
+  }
+
   const { classes } = props;
   return (
     <div className={classes.root}>
@@ -33,7 +37,7 @@ function ButtonAppBar(props) {
           <Typography variant="h6" color="inherit" className={classes.grow}>
             Diffie-Hellman Key Exchange Demo Application
           </Typography>
-          <Button color="inherit">Reload</Button>
+          <Button color="inherit" onClick={refreshPage}>Reload</Button>
         </Toolbar>
       </AppBar>
     </div>
