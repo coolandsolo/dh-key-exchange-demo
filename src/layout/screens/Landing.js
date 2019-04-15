@@ -1,13 +1,13 @@
 import React, { Component } from 'react';
-// import Grid from '@material-ui/core/Grid';
 import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
+const crypto = require('crypto');
 
 class Landing extends Component {
 
   constructor(props) {
     super(props);
-    this.state = {Name: ''};
+    this.state = { Name: '' };
   }
 
   handleChange = name => event => {
@@ -15,12 +15,24 @@ class Landing extends Component {
   };
 
   setName = () => {
-    let { setRootState, socket } = this.props;
+    let { setRootState, socket, appState } = this.props;
     setRootState({
       name: this.state.Name
     });
 
-    socket.emit('name set', { id: socket.id, name: this.state.Name });
+    socket.emit('execute', {
+      action: 'setName', body: { id: socket.id, name: this.state.Name }
+    });
+
+    if (!(appState.prime && appState.generator)) {
+      let hex = crypto.createDiffieHellman(appState.primeSize).getPrime('hex');
+      let prime = parseInt(hex, 16);
+      let generator = Math.floor(Math.random() * 10) + 4;
+
+      socket.emit('execute', {
+        action: 'setPrimeGenerator', body: { prime: prime, generator: generator }
+      });
+    }
   };
 
   componentDidUpdate(prevProps) {
@@ -39,7 +51,7 @@ class Landing extends Component {
 
   render() {
     let d_name = this.getDefaultName(this.props.appState);
-
+    
     return (
       <div>
         <TextField id="Name" value={this.state.Name} label="Name" helperText={'Enter a name for "' + d_name + '"'} margin="normal"

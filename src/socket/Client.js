@@ -1,5 +1,6 @@
+import Actions from './Actions';
 var getSocket = (appState, setRootState) => {
-  console.log('SOCKET_SERVER',process.env.REACT_APP_SOCKET_SERVER);
+  console.log('SOCKET_SERVER', process.env.REACT_APP_SOCKET_SERVER);
   var socket = require('socket.io-client')('http://' + process.env.REACT_APP_SOCKET_SERVER + '/');
 
   socket.on('connect', function () {
@@ -28,13 +29,10 @@ var getSocket = (appState, setRootState) => {
     console.log('connection update:', msg);
   });
 
-  socket.on('name set', function (msg) {
-    setRootState((state, props) => {
-      state.sessions[msg.id] = msg.name;
-      return { sessions: state.sessions };
-    });
-
-    console.log('name set', msg);
+  socket.on('execute', function (msg) {
+    var handler = new Actions(appState, setRootState);
+    var r = handler[msg.action](msg.body);
+    console.log('execute ' + msg.action, msg.body, r);
   });
 
   return socket;

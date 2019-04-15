@@ -13,9 +13,11 @@ class App extends Component {
       socketIds: null,
       name: '',
       sessions: [],
-      drawer: true,
+      drawer: false,
       mitma: false, //False is normal mode, True is MITMA mode
       primeSize: 32,
+      prime: 0,
+      generator: 0,
     };
 
     this.socket = null;
@@ -33,9 +35,9 @@ class App extends Component {
   render() {
     return (
       <div className="App">
-        <ButtonAppBar setRootState={this.setRootState}></ButtonAppBar>
-        
-        <SettingsDrawer drawerState={this.state.drawer} setRootState={this.setRootState} mitmaState={this.state.mitma}
+        <ButtonAppBar socket={this.socket} setRootState={this.setRootState} appState={this.state}></ButtonAppBar>
+
+        <SettingsDrawer socket={this.socket} drawerState={this.state.drawer} setRootState={this.setRootState} mitmaState={this.state.mitma}
           primeSize={this.state.primeSize}
         />
 

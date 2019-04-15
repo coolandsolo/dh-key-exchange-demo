@@ -7,13 +7,14 @@ class Waiting extends Component {
 
   render() {
     const { waitText } = this.props;
-    const { name } = this.props.appState;
 
     return (
-      <Typography variant="body1" gutterBottom>
-        {name} is {waitText} <br /><br />
+      <div>
+        <Typography variant="body1" gutterBottom>
+          {waitText} <br /><br />
+        </Typography>
         <LinearProgress />
-      </Typography>
+      </div>
     );
   }
 }

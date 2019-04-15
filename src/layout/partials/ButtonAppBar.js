@@ -7,10 +7,15 @@ import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';
 import IconButton from '@material-ui/core/IconButton';
 import MenuIcon from '@material-ui/icons/Menu';
+import Chip from '@material-ui/core/Chip';
+import FaceIcon from '@material-ui/icons/Face';
+import Avatar from '@material-ui/core/Avatar';
+import Grid from '@material-ui/core/Grid';
 
 const styles = {
-  root: {
-    flexGrow: 1,
+  chip: {
+    height: 60,
+    paddingRight: '30px',
   },
   grow: {
     flexGrow: 1,
@@ -23,10 +28,10 @@ const styles = {
 };
 
 function ButtonAppBar(props) {
-  const { classes, setRootState } = props;
+  const { socket, classes, setRootState, appState } = props;
 
   let refreshPage = () => {
-    window.location.reload();
+    socket.emit('execute', { action: 'reset', body: true });
   }
 
   let toggleSettings = () => {
@@ -36,7 +41,7 @@ function ButtonAppBar(props) {
   }
 
   return (
-    <div className={classes.root}>
+    <div>
       <AppBar position="static">
         <Toolbar>
           <IconButton className={classes.menuButton} color="inherit" aria-label="Menu" onClick={toggleSettings}>
@@ -48,6 +53,17 @@ function ButtonAppBar(props) {
           <Button color="inherit" onClick={refreshPage}>Reload</Button>
         </Toolbar>
       </AppBar>
+
+      <Grid container direction="row" justify="flex-end" alignItems="center" className={classes.chip}>
+        <Grid item>
+          {appState && appState.name ?
+            <Chip
+              avatar={<Avatar><FaceIcon /></Avatar>}
+              label={appState.name}
+              color="secondary"
+            /> : null}
+        </Grid>
+      </Grid>
     </div>
   );
 }

@@ -13,11 +13,13 @@ class ScreenLoader extends Component {
 
   render() {
     let { appState, setRootState, socket } = this.props;
-    let { socketId, name, sessions, mode } = appState;
-    let screen = '';
-    let minClients = (mode === 'NORMAL' ? 2 : 3);
-
-    if (name && Object.keys(sessions).length >= minClients) {
+    let { socketId, name, sessions, mitma, socketIds } = appState;
+    let screen = null;
+    let minClients = mitma ? 3 : 2;
+    
+    if (socketIds && socketIds.length > minClients) {
+      screen = 'Maximum numer of ' + minClients + ' Session exceeded in ' + (mitma ? 'MITMA' : 'Normal') + ' mode';
+    } else if (name && Object.keys(sessions).length >= minClients) {
       screen = <SharedNumbers socket={socket} appState={appState} setRootState={setRootState} />
     } else if (name) {
       screen = <Waiting socket={socket} appState={appState} setRootState={setRootState} waitText="Waiting on other parties" />

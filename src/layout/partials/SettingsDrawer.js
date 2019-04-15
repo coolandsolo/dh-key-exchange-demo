@@ -15,13 +15,13 @@ import MenuItem from '@material-ui/core/MenuItem';
 
 class SettingsDrawer extends React.Component {
   toggleMitma = () => {
-    const { mitmaState, setRootState } = this.props;
-    setRootState({ mitma: !mitmaState });
+    const { socket, mitmaState } = this.props;
+    socket.emit('execute', { action: 'setMITMA', body: !mitmaState });
   }
 
   ChangePrime = (event) => {
-    const { setRootState } = this.props;
-    setRootState({ primeSize: event.target.value });
+    const { socket } = this.props;
+    socket.emit('execute', { action: 'setPrimeSize', body: event.target.value });
   }
 
   closeSettings = () => {
