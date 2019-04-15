@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 // import Grid from '@material-ui/core/Grid';
 import LinearProgress from '@material-ui/core/LinearProgress';
+import Typography from '@material-ui/core/Typography';
 
 class Waiting extends Component {
 
@@ -9,10 +10,10 @@ class Waiting extends Component {
     const { name } = this.props.appState;
 
     return (
-      <div>
+      <Typography variant="body1" gutterBottom>
         {name} is {waitText} <br /><br />
         <LinearProgress />
-      </div>
+      </Typography>
     );
   }
 }

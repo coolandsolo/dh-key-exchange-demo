@@ -20,7 +20,7 @@ class SharedNumbers extends Component {
       name: this.state.Name
     });
 
-    socket.emit('name set', {id: socket.id, name: this.state.Name});
+    socket.emit('name set', { id: socket.id, name: this.state.Name });
   };
 
   render() {

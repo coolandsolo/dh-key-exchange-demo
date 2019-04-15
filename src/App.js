@@ -13,14 +13,15 @@ class App extends Component {
       socketIds: null,
       name: '',
       sessions: [],
-      mode: 'NORMAL', //NORMAL|MITMA
-      drawer: false,
+      drawer: true,
+      mitma: false, //False is normal mode, True is MITMA mode
+      primeSize: 32,
     };
 
     this.socket = null;
   }
 
-  componentWillMount(a) {
+  componentWillMount() {
     const { getSocket } = this.props;
     this.socket = getSocket(this.state, this.setRootState);
   }
@@ -33,7 +34,11 @@ class App extends Component {
     return (
       <div className="App">
         <ButtonAppBar setRootState={this.setRootState}></ButtonAppBar>
-        <SettingsDrawer drawerState={this.state.drawer} setRootState={this.setRootState}></SettingsDrawer>
+        
+        <SettingsDrawer drawerState={this.state.drawer} setRootState={this.setRootState} mitmaState={this.state.mitma}
+          primeSize={this.state.primeSize}
+        />
+
         <ScreenLoader socket={this.socket} appState={this.state} setRootState={this.setRootState} />
       </div>
     );

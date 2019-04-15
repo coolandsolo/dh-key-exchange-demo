@@ -8,138 +8,33 @@ import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import getSocket from './socket/Client.js';
 
-
 const socket = getSocket;
-// const theme = createMuiTheme({
-//     palette: {
-//         // type: 'dark',
-//     },
-//     typography: {
-//         useNextVariants: true,
-//     },
-// });
-
 let theme = createMuiTheme({
-    typography: {
-      useNextVariants: true,
-      h5: {
-        fontWeight: 500,
-        fontSize: 26,
-        letterSpacing: 0.5,
-      },
-    },
     palette: {
-      primary: {
-        light: '#63ccff',
-        main: '#009be5',
-        dark: '#006db3',
-      },
-    },
-    shape: {
-      borderRadius: 8,
-    },
-  });
-  
-  theme = {
-    ...theme,
-    overrides: {
-      MuiDrawer: {
-        paper: {
-          backgroundColor: '#18202c',
-        },
-      },
-      MuiButton: {
-        label: {
-          textTransform: 'initial',
-        },
-        contained: {
-          boxShadow: 'none',
-          '&:active': {
-            boxShadow: 'none',
-          },
-        },
-      },
-      MuiTabs: {
-        root: {
-          marginLeft: theme.spacing.unit,
-        },
-        indicator: {
-          height: 3,
-          borderTopLeftRadius: 3,
-          borderTopRightRadius: 3,
-          backgroundColor: theme.palette.common.white,
-        },
-      },
-      MuiTab: {
-        root: {
-          textTransform: 'initial',
-          margin: '0 16px',
-          minWidth: 0,
-          [theme.breakpoints.up('md')]: {
-            minWidth: 0,
-          },
-        },
-        labelContainer: {
-          padding: 0,
-          [theme.breakpoints.up('md')]: {
-            padding: 0,
-          },
-        },
-      },
-      MuiIconButton: {
-        root: {
-          padding: theme.spacing.unit,
-        },
-      },
-      MuiTooltip: {
-        tooltip: {
-          borderRadius: 4,
-        },
-      },
-      MuiDivider: {
-        root: {
-          backgroundColor: '#404854',
-        },
-      },
-      MuiListItemText: {
+        type: 'light',
         primary: {
-          fontWeight: theme.typography.fontWeightMedium,
+            light: '#9be6ff',
+            main: '#64b4f6',
+            dark: '#2285c3',
+            contrastText: '#e0f7fa',
         },
-      },
-      MuiListItemIcon: {
-        root: {
-          color: 'inherit',
-          marginRight: 0,
-          '& svg': {
-            fontSize: 20,
-          },
+        secondary: {
+            light: '#4c8c4a',
+            main: '#1b5e20',
+            dark: '#003300',
+            contrastText: '#c8e6c9',
         },
-      },
-      MuiAvatar: {
-        root: {
-          width: 32,
-          height: 32,
-        },
-      },
     },
-    props: {
-      MuiTab: {
-        disableRipple: true,
-      },
+    typography: {
+        useNextVariants: true,
     },
-    mixins: {
-      ...theme.mixins,
-      toolbar: {
-        minHeight: 48,
-      },
-    },
-  };
+});
 
 function Root() {
     return (
         <MuiThemeProvider theme={theme}>
             <CssBaseline />
-            <App getSocket={socket}/>
+            <App getSocket={socket} />
         </MuiThemeProvider>
     );
 }
