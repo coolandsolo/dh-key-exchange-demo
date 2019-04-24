@@ -18,6 +18,12 @@ class App extends Component {
       primeSize: 32,
       prime: 0,
       generator: 0,
+      currentScreen: '',
+      myPrivateKey: 0,
+      myPublicKey: 0,
+      theirPublicKey: 0,
+      secretKey: 0,
+      demoSend: 0,
     };
 
     this.socket = null;

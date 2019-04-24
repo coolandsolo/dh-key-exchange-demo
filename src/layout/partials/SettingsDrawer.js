@@ -71,9 +71,10 @@ class SettingsDrawer extends React.Component {
                   <MenuItem value={16}>16 bits</MenuItem>
                   <MenuItem value={32}>32 bits</MenuItem>
                   <MenuItem value={64}>64 bits</MenuItem>
-                  <MenuItem value={128}>128 bits</MenuItem>
+                  {/* <MenuItem value={128}>128 bits</MenuItem>
                   <MenuItem value={256}>256 bits</MenuItem>
                   <MenuItem value={512}>512 bits</MenuItem>
+                  <MenuItem value={1024}>1024 bits</MenuItem> */}
                 </Select>
               </ListItemSecondaryAction>
             </ListItem>

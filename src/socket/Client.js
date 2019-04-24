@@ -31,8 +31,8 @@ var getSocket = (appState, setRootState) => {
 
   socket.on('execute', function (msg) {
     var handler = new Actions(appState, setRootState);
-    var r = handler[msg.action](msg.body);
-    console.log('execute ' + msg.action, msg.body, r);
+    handler[msg.action](msg.body);
+    console.log('execute ' + msg.action, msg.body, 'from Client.js');
   });
 
   return socket;

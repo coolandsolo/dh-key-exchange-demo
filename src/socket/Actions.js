@@ -29,7 +29,21 @@ class Actions {
   setPrimeGenerator(msg) {
     return this.setRootState({ prime: msg.prime, generator: msg.generator });
   }
-  
+
+  setCurrentScreen(msg) {
+    return this.setRootState({ currentScreen: msg });
+  }
+
+  setTheirPublicKey(msg) {
+    return this.setRootState({ theirPublicKey: msg });
+  }
+
+  setReadyToSend(msg) {
+    return this.setRootState((state, props) => {
+      state.demoSend += 1;
+      return { demoSend: state.demoSend };
+    });
+  }
   
 }
 

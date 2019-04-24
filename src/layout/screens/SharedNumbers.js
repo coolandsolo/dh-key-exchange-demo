@@ -11,6 +11,15 @@ const styles = {
 };
 
 class SharedNumbers extends Component {
+  toPrivateNumber = () => {
+    let { setRootState, socket } = this.props;
+    setRootState({currentScreen: 'PrivateNumber'});
+
+    socket.emit('execute', {
+      action: 'setCurrentScreen', body: 'PrivateNumber'
+    });
+  }
+
   render() {
     const { classes, appState } = this.props;
     const { prime, generator } = appState;
@@ -20,7 +29,7 @@ class SharedNumbers extends Component {
         Prime: <strong>{prime}</strong><br />
         Generator: <strong>{generator}</strong>
         <br /><br />
-        <Button variant="contained" color="primary" className="next">Next</Button>
+        <Button variant="contained" color="primary" className="next" onClick={this.toPrivateNumber}>Generate a Private Key</Button>
       </div>
     );
   }

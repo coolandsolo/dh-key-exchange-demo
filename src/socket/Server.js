@@ -43,7 +43,11 @@ io.on('connection', function (socket) {
 
   socket.on('execute', function (msg) {
     console.log('Executing ' + msg.action, msg);
-    io.emit('execute', msg);
+    if (msg.mode && msg.mode === 'broadcast') {
+      socket.broadcast.emit('execute', msg);
+    } else {
+      io.emit('execute', msg);
+    }
   });
 
 });
