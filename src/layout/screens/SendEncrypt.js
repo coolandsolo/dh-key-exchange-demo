@@ -33,20 +33,6 @@ class SendEncrypt extends Component {
   }
 
   toSendEncrypt = () => {
-    // let { setRootState, socket, appState } = this.props;
-    // console.log(appState, setRootState, socket);
-
-    // this.setState({ demo: true });
-
-    // socket.emit('execute', {
-    //   action: 'setReadyToSend', body: 1
-    // });
-
-    // setRootState({currentScreen: 'SendEncrypt'});
-
-    // socket.emit('execute', {
-    //   action: 'setCurrentScreen', body: 'SendEncrypt'
-    // });
   }
 
   render() {

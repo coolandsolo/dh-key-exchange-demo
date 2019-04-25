@@ -41,12 +41,6 @@ class SharedSecret extends Component {
     socket.emit('execute', {
       action: 'setReadyToSend', body: 1
     });
-
-    // setRootState({currentScreen: 'SharedSecret'});
-
-    // socket.emit('execute', {
-    //   action: 'setCurrentScreen', body: 'SharedSecret'
-    // });
   }
 
   render() {
