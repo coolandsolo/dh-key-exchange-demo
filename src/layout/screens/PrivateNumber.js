@@ -6,6 +6,7 @@ import { withStyles } from '@material-ui/core/styles';
 import AutorenewIcon from '@material-ui/icons/Autorenew';
 import IconButton from '@material-ui/core/IconButton';
 import bigInt from 'big-integer';
+import { getReceiver } from '../../Toolbox';
 
 const styles = {
   head: {
@@ -33,12 +34,18 @@ class PrivateNumber extends Component {
   }
 
   toSharedSecret = () => {
-    let { setRootState, socket } = this.props;
+    let { setRootState, socket, appState } = this.props;
 
     setRootState({ myPrivateKey: this.state.privateKey, myPublicKey: this.state.publicKey });
 
+    let receiver = getReceiver(appState);
+    console.log('receiver', receiver, appState.socketId);
+
     socket.emit('execute', {
-      action: 'setTheirPublicKey', body: this.state.publicKey, mode: 'broadcast'
+      action: 'setTheirPublicKey',
+      mode: 'direct',
+      receiver: receiver,
+      body: { publicKey: this.state.publicKey, sender: appState.socketId }
     });
   }
 

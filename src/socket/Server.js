@@ -43,8 +43,8 @@ io.on('connection', function (socket) {
 
   socket.on('execute', function (msg) {
     console.log('Executing ' + msg.action, msg);
-    if (msg.mode && msg.mode === 'broadcast') {
-      socket.broadcast.emit('execute', msg);
+    if (msg.mode && msg.mode === 'direct') {
+      io.to(msg.receiver).emit('execute', msg);
     } else {
       io.emit('execute', msg);
     }

@@ -35,7 +35,11 @@ class Actions {
   }
 
   setTheirPublicKey(msg) {
-    return this.setRootState({ theirPublicKey: msg });
+    if(this.appState.mitma) {
+      return this.setRootState({ theirPublicKey: msg.publicKey });
+    } else {
+      return this.setRootState({ theirPublicKey: msg.publicKey });
+    }
   }
 
   setReadyToSend(msg) {
