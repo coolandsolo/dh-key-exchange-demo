@@ -6,6 +6,8 @@ import SharedNumbers from './layout/screens/SharedNumbers.js';
 import PrivateNumber from './layout/screens/PrivateNumber.js';
 import SharedSecret from './layout/screens/SharedSecret.js';
 import SendEncrypt from './layout/screens/SendEncrypt.js';
+import Attack from './layout/screens/Attack.js';
+import { isEve } from './Toolbox';
 
 class ScreenLoader extends Component {
 
@@ -22,6 +24,8 @@ class ScreenLoader extends Component {
     
     if (socketIds && socketIds.length > minClients) {
       screen = 'Maximum numer of ' + minClients + ' Session exceeded in ' + (mitma ? 'MITMA' : 'Normal') + ' mode';
+    } else if (mitma && isEve(appState) && name) {
+      screen = <Attack socket={socket} appState={appState} setRootState={setRootState} />
     } else if (demoSend > 1) {
       screen = <SendEncrypt socket={socket} appState={appState} setRootState={setRootState} />
     } else if (myPublicKey && theirPublicKey) {

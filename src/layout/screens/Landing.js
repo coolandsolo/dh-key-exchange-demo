@@ -3,6 +3,7 @@ import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
 import Forge from 'node-forge';
 import bigInt from 'big-integer';
+import { isEve } from '../../Toolbox';
 
 class Landing extends Component {
 
@@ -81,17 +82,21 @@ class Landing extends Component {
     socket.emit('execute', {
       action: 'setName', body: { id: socket.id, name: this.state.Name }
     });
-
-    if (!(appState.prime && appState.generator)) {
+    
+    if (!isEve(appState) && !(appState.prime && appState.generator)) {
       this.getPrime();
     }
   };
 
   componentDidUpdate(prevProps) {
     // Typical usage (don't forget to compare props):
-    if (this.props.appState !== prevProps.appState) {
+    if (this.props.appState.socketIds !== prevProps.appState.socketIds) {
       this.setState({ Name: this.getDefaultName(this.props.appState) });
     }
+  }
+
+  componentDidMount() {
+      this.setState({ Name: this.getDefaultName(this.props.appState) });
   }
 
   getDefaultName = (appState) => {
@@ -102,14 +107,15 @@ class Landing extends Component {
   }
 
   render() {
-    let d_name = this.getDefaultName(this.props.appState);
+    let { appState } = this.props;
+    let d_name = this.getDefaultName(appState);
 
     return (
       <div>
         <TextField id="Name" value={this.state.Name} label="Name" helperText={'Enter a name for "' + d_name + '"'} margin="normal"
           onChange={this.handleChange('Name')} />
         <br /><br /><br />
-        <Button variant="contained" color="primary" className="next" onClick={this.setName}>Agree on Two Numbers</Button>
+        <Button variant="contained" color="primary" className="next" onClick={this.setName}>{isEve(appState) ? 'Set Name' : 'Agree on Two Numbers'}</Button>
       </div>
     );
   }

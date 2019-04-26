@@ -8,6 +8,7 @@
     "big-integer": "^1.6.43",
     "node-forge": "^0.8.2",
     "react": "^16.8.6",
+    "react-console-component": "^0.6.1",
     "react-dom": "^16.8.6",
     "react-scripts": "2.1.8",
     "socket.io": "^2.2.0",

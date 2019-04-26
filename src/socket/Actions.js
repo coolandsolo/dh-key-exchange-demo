@@ -9,8 +9,7 @@ class Actions {
 
   setName(msg) {
     return this.setRootState((state, props) => {
-      state.sessions[msg.id] = msg.name;
-      return { sessions: state.sessions };
+      return { sessions: { ...state.sessions, [msg.id]: msg.name } };
     });
   }
 
@@ -19,6 +18,7 @@ class Actions {
   }
 
   setMITMA(msg) {
+    console.log('setMITMA', msg);
     return this.setRootState({ mitma: msg });
   }
 
@@ -35,7 +35,7 @@ class Actions {
   }
 
   setTheirPublicKey(msg) {
-    if(this.appState.mitma) {
+    if (this.appState.mitma) {
       return this.setRootState({ theirPublicKey: msg.publicKey });
     } else {
       return this.setRootState({ theirPublicKey: msg.publicKey });
@@ -44,11 +44,10 @@ class Actions {
 
   setReadyToSend(msg) {
     return this.setRootState((state, props) => {
-      state.demoSend += 1;
-      return { demoSend: state.demoSend };
+      return { demoSend: state.demoSend + 1 };
     });
   }
-  
+
 }
 
 export default Actions;

@@ -5,8 +5,7 @@ import Typography from '@material-ui/core/Typography';
 import { withStyles } from '@material-ui/core/styles';
 import AutorenewIcon from '@material-ui/icons/Autorenew';
 import IconButton from '@material-ui/core/IconButton';
-import bigInt from 'big-integer';
-import { getReceiver } from '../../Toolbox';
+import { getReceiver, getPrivateKey, getPublicKey } from '../../Toolbox';
 
 const styles = {
   head: {
@@ -29,8 +28,8 @@ class PrivateNumber extends Component {
 
   refreshKey = () => {
     let { prime, generator } = this.props.appState;
-    let pvk = bigInt.randBetween(30, 100), puk = bigInt(generator).modPow(pvk, bigInt(prime));
-    this.setState({ privateKey: pvk.toString(10), publicKey: puk.toString(10) });
+    let pvk = getPrivateKey();
+    this.setState({ privateKey: pvk, publicKey: getPublicKey(generator, pvk, prime) });
   }
 
   toSharedSecret = () => {

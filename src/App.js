@@ -12,9 +12,9 @@ class App extends Component {
       socketId: null,
       socketIds: null,
       name: '',
-      sessions: [],
+      sessions: {},
       drawer: false,
-      mitma: false, //False is normal mode, True is MITMA mode
+      mitma: true, //False is normal mode, True is MITMA mode
       primeSize: 32,
       prime: 0,
       generator: 0,
