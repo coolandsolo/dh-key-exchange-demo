@@ -9,6 +9,7 @@ import Switch from '@material-ui/core/Switch';
 import MemoryIcon from '@material-ui/icons/Memory';
 import SettingsIcon from '@material-ui/icons/Settings';
 import MITMAIcon from '@material-ui/icons/TransferWithinAStation';
+import AESIcon from '@material-ui/icons/EnhancedEncryption';
 import Divider from '@material-ui/core/Divider';
 import Select from '@material-ui/core/Select';
 import MenuItem from '@material-ui/core/MenuItem';
@@ -17,6 +18,11 @@ class SettingsDrawer extends React.Component {
   toggleMitma = () => {
     const { socket, mitmaState } = this.props;
     socket.emit('execute', { action: 'setMITMA', body: !mitmaState });
+  }
+
+  toggleAes = () => {
+    const { socket, aesState } = this.props;
+    socket.emit('execute', { action: 'setAES', body: !aesState });
   }
 
   ChangePrime = (event) => {
@@ -32,7 +38,7 @@ class SettingsDrawer extends React.Component {
   }
 
   render() {
-    const { drawerState, mitmaState, primeSize } = this.props;
+    const { drawerState, mitmaState, primeSize, aesState } = this.props;
 
     return (
       <div>
@@ -57,6 +63,7 @@ class SettingsDrawer extends React.Component {
                 />
               </ListItemSecondaryAction>
             </ListItem>
+
             <ListItem>
               <ListItemIcon>
                 <MemoryIcon />
@@ -76,6 +83,19 @@ class SettingsDrawer extends React.Component {
                   <MenuItem value={512}>512 bits</MenuItem>
                   <MenuItem value={1024}>1024 bits</MenuItem> */}
                 </Select>
+              </ListItemSecondaryAction>
+            </ListItem>
+
+            <ListItem>
+              <ListItemIcon>
+                <AESIcon />
+              </ListItemIcon>
+              <ListItemText primary="AES Encryptioon" />
+              <ListItemSecondaryAction>
+                <Switch
+                  onChange={this.toggleAes}
+                  checked={aesState}
+                />
               </ListItemSecondaryAction>
             </ListItem>
           </List>

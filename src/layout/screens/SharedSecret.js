@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-// import Button from '@material-ui/core/Button';
+import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
 import { withStyles } from '@material-ui/core/styles';
 import { calculateKey } from '../../Toolbox';
@@ -45,15 +45,15 @@ class SharedSecret extends Component {
   }
 
   render() {
-    const { classes } = this.props;
+    const { classes, appState } = this.props;
     return (
       <div>
         <Typography className={classes.head} variant="h3">Congratulations! Your Shared Secret is: {this.state.secret}</Typography>
         <br /><br />Derived using the formula <strong>[(PUK ^ PRK) MOD P]</strong>
         <br /> <br />
-        {/* <Button variant="contained" color="primary" className="next" onClick={this.toSendEncrypt} disabled={Boolean(this.state.demo)} >
+        { appState.aes ? <Button variant="contained" color="primary" className="next" onClick={this.toSendEncrypt} disabled={Boolean(this.state.demo)} >
           {this.state.demo ? 'Waiting on them...' : 'Send Encrypted Messages'}
-        </Button> */}
+        </Button> : null }
       </div >
     );
   }

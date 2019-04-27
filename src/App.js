@@ -14,7 +14,7 @@ class App extends Component {
       name: '',
       sessions: {},
       drawer: false,
-      mitma: true, //False is normal mode, True is MITMA mode
+      mitma: false, //False is normal mode, True is MITMA mode
       primeSize: 32,
       prime: 0,
       generator: 0,
@@ -28,6 +28,8 @@ class App extends Component {
       mitma_b_pvk: 0,
       secretKey: 0,
       demoSend: 0,
+      aes: false,
+      lastReceived: '',
     };
 
     this.socket = null;
@@ -47,7 +49,7 @@ class App extends Component {
       <div className="App">
         <ButtonAppBar socket={this.socket} setRootState={this.setRootState} appState={this.state}></ButtonAppBar>
 
-        <SettingsDrawer socket={this.socket} drawerState={this.state.drawer} setRootState={this.setRootState} mitmaState={this.state.mitma}
+        <SettingsDrawer socket={this.socket} drawerState={this.state.drawer} setRootState={this.setRootState} mitmaState={this.state.mitma} aesState={this.state.aes}
           primeSize={this.state.primeSize}
         />
 

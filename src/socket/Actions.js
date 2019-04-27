@@ -24,6 +24,11 @@ class Actions {
     return this.setRootState({ mitma: msg });
   }
 
+  setAES(msg) {
+    console.log('setAES', msg);
+    return this.setRootState({ aes: msg });
+  }
+  
   setPrimeSize(msg) {
     return this.setRootState({ primeSize: msg });
   }
@@ -34,6 +39,20 @@ class Actions {
 
   setCurrentScreen(msg) {
     return this.setRootState({ currentScreen: msg });
+  }
+
+  setMessage(msg) {
+    return this.setRootState((state, props) => {
+      if (state.mitma && isEve(state)) {
+        if (state.socketIds[0] === msg.sender) {
+          return { mitma_a_lastReceived: msg.message };
+        } else if (state.socketIds[1] === msg.sender) {
+          return { mitma_b_lastReceived: msg.message };
+        }
+      } else {
+        return { lastReceived: msg.message };
+      }
+    });
   }
 
   setTheirPublicKey(msg) {
