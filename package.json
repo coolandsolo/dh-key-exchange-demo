@@ -5,6 +5,7 @@
   "dependencies": {
     "@material-ui/core": "^3.9.3",
     "@material-ui/icons": "^3.0.2",
+    "async-delay-queue": "^1.0.11",
     "big-integer": "^1.6.43",
     "node-forge": "^0.8.2",
     "react": "^16.8.6",

@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import Button from '@material-ui/core/Button';
+// import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
 import { withStyles } from '@material-ui/core/styles';
-import bigInt from 'big-integer';
+import { calculateKey } from '../../Toolbox';
 
 const styles = {
   head: {
@@ -27,9 +27,10 @@ class SharedSecret extends Component {
   calculateSecret = () => {
     let { setRootState, appState } = this.props;
     let { prime, theirPublicKey, myPrivateKey } = appState;
-    let secret = bigInt(theirPublicKey).modPow(bigInt(myPrivateKey), bigInt(prime));
-    this.setState({ secret: secret.toString(10) });
-    setRootState({ secretKey: secret.toString(10) });
+    // let secret = bigInt(theirPublicKey).modPow(bigInt(myPrivateKey), bigInt(prime));
+    let secret = calculateKey(theirPublicKey, myPrivateKey, prime);
+    this.setState({ secret: secret });
+    setRootState({ secretKey: secret });
   }
 
   toSendEncrypt = () => {
@@ -47,12 +48,12 @@ class SharedSecret extends Component {
     const { classes } = this.props;
     return (
       <div>
-        <Typography className={classes.head} variant="h3">The Shared Secret is: {this.state.secret}</Typography>
+        <Typography className={classes.head} variant="h3">Congratulations! Your Shared Secret is: {this.state.secret}</Typography>
         <br /><br />Derived using the formula <strong>[(PUK ^ PRK) MOD P]</strong>
-      <br /> <br />
-      <Button variant="contained" color="primary" className="next" onClick={this.toSendEncrypt} disabled={Boolean(this.state.demo)} >
-        {this.state.demo ? 'Waiting on them...' : 'Send Encrypted Messages'}
-      </Button>
+        <br /> <br />
+        {/* <Button variant="contained" color="primary" className="next" onClick={this.toSendEncrypt} disabled={Boolean(this.state.demo)} >
+          {this.state.demo ? 'Waiting on them...' : 'Send Encrypted Messages'}
+        </Button> */}
       </div >
     );
   }

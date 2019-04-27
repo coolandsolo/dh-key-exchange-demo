@@ -17,7 +17,7 @@ export const getPrivateKey = (state) => {
   return pvk.toString(10);
 };
 
-export const getPublicKey = (generator, pvk, prime) => {
+export const calculateKey = (generator, pvk, prime) => {
   let puk = bigInt(generator).modPow(bigInt(pvk), bigInt(prime));
   return puk.toString(10)
 };

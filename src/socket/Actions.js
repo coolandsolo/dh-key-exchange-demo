@@ -1,3 +1,5 @@
+import { isEve } from '../Toolbox';
+
 class Actions {
   appState = null;
   setRootState = null;
@@ -35,11 +37,17 @@ class Actions {
   }
 
   setTheirPublicKey(msg) {
-    if (this.appState.mitma) {
-      return this.setRootState({ theirPublicKey: msg.publicKey });
-    } else {
-      return this.setRootState({ theirPublicKey: msg.publicKey });
-    }
+    return this.setRootState((state, props) => {
+      if (state.mitma && isEve(state)) {
+        if (state.socketIds[0] === msg.sender) {
+          return { mitma_a_puk: msg.publicKey };
+        } else if (state.socketIds[1] === msg.sender) {
+          return { mitma_b_puk: msg.publicKey };
+        }
+      } else {
+        return { theirPublicKey: msg.publicKey };
+      }
+    });
   }
 
   setReadyToSend(msg) {

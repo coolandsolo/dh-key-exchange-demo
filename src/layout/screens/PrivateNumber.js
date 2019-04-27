@@ -5,7 +5,7 @@ import Typography from '@material-ui/core/Typography';
 import { withStyles } from '@material-ui/core/styles';
 import AutorenewIcon from '@material-ui/icons/Autorenew';
 import IconButton from '@material-ui/core/IconButton';
-import { getReceiver, getPrivateKey, getPublicKey } from '../../Toolbox';
+import { getReceiver, getPrivateKey, calculateKey } from '../../Toolbox';
 
 const styles = {
   head: {
@@ -29,7 +29,7 @@ class PrivateNumber extends Component {
   refreshKey = () => {
     let { prime, generator } = this.props.appState;
     let pvk = getPrivateKey();
-    this.setState({ privateKey: pvk, publicKey: getPublicKey(generator, pvk, prime) });
+    this.setState({ privateKey: pvk, publicKey: calculateKey(generator, pvk, prime) });
   }
 
   toSharedSecret = () => {

@@ -33,6 +33,7 @@ class SendEncrypt extends Component {
   }
 
   toSendEncrypt = () => {
+    console.log('data appState', this.props.appState);
   }
 
   render() {

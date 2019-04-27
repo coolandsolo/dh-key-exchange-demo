@@ -22,6 +22,10 @@ class App extends Component {
       myPrivateKey: 0,
       myPublicKey: 0,
       theirPublicKey: 0,
+      mitma_a_puk: 0,
+      mitma_b_puk: 0,
+      mitma_a_pvk: 0,
+      mitma_b_pvk: 0,
       secretKey: 0,
       demoSend: 0,
     };

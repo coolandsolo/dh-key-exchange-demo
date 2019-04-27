@@ -4,7 +4,8 @@ import Typography from '@material-ui/core/Typography';
 import { withTheme } from '@material-ui/core/styles'
 import Paper from '@material-ui/core/Paper';
 import Console from 'react-console-component';
-import { getPrivateKey, getPublicKey, getAliceName, getBobName } from '../../Toolbox';
+import { getPrivateKey, calculateKey, getAliceName, getBobName } from '../../Toolbox';
+import queue from 'async-delay-queue';
 
 class Attack extends Component {
 
@@ -12,15 +13,17 @@ class Attack extends Component {
     super();
     this.state = {
       welcomeMessage: '',
-      alice: { private: {}, public: {}, secret: {} },
-      bob: { private: {}, public: {}, secret: {} },
-      delay: { enable: true, tt: 0, resolve: false },
+      a_puk: '',
+      b_puk: '',
+      a_pvk: '',
+      b_pvk: '',
+      b_secret: '',
+      a_secret: '',
     };
   }
 
   componentDidMount() {
-    let { appState } = this.props;
-    this.loadWelcomeMessages(appState);
+    this.loadWelcomeMessages();
   }
 
   styles = {
@@ -33,82 +36,35 @@ class Attack extends Component {
     }
   };
 
-  loadWelcomeMessages = async (appState) => {
-    await this.addDelay(1000);
-    this.welcomeAppend(`Welcome Hacker ${appState.name}!\n\n`);
-    await this.addDelay(2000);
-    this.welcomeAppend(`Waiting to intercept Prime and Generator numbers...\n`);
+  child: {
+    console?: Console,
+  } = {};
+
+  loadWelcomeMessages = async () => {
+    let { appState } = this.props;
+    this.enque(`Welcome Hacker ${appState.name}!\n\n`, 1000);
+    this.enque(`Waiting to intercept Prime and Generator numbers...\n`, 1000);
 
     if (appState.prime) {
       this.intercept('prime,gen', appState);
     }
   }
 
-  child: {
-    console?: Console,
-  } = {};
+  enque = async (msg, delay) => {
+    let res = await queue.delay(() => this.welcomeAppend(msg), delay);
+    return res
+  }
+
+  welcomeAppend = (msg, timeout) => {
+    // console.log('append: ', msg);
+    return this.setState((state, props) => {
+      return { welcomeMessage: state.welcomeMessage + msg };
+    });
+  }
 
   handleConsoleInput = (text) => {
     this.child.console.log(text);
     this.child.console.return();
-  }
-
-
-  addDelay = async (duration) => {
-    console.log('addDelay pre', this.state.delay);
-    return (this.state.delay.enable) ? new Promise(resolve => {
-      this.setState((state, props) => {
-        return {
-          delay: { ...state.delay, resolve: resolve },
-        };
-      });
-      let tt = setTimeout(() => {
-        resolve(null)
-      }, duration);
-
-      this.setState((state, props) => {
-        return {
-          delay: { ...state.delay, tt: tt },
-        };
-      });
-      console.log('addDelay in', this.state.delay);
-    }) : false;
-  }
-
-  enableDelay = () => {
-    this.setState((state, props) => {
-      return {
-        delay: { ...state.delay, enable: true },
-      };
-    });
-
-    console.log('enabled delay', this.state.delay);
-  }
-
-  clearDelay = () => {
-    if (this.state.delay.resolve) {
-      this.state.delay.resolve(null);
-    }
-
-    if (this.state.delay.tt) {
-      clearTimeout(this.state.delay.tt);
-    }
-
-    this.setState((state, props) => {
-      return {
-        delay: { ...state.delay, resolve: false, tt: 0, enable: false },
-      };
-    });
-
-    console.log('cleared delay', this.state.delay);
-  };
-
-  welcomeAppend = (msg, timeout) => {
-    console.log('append: ', msg);
-    return this.setState((state, props) => {
-      state.welcomeMessage += msg;
-      return { welcomeMessage: state.welcomeMessage };
-    });
   }
 
   promptLabel = () => {
@@ -119,41 +75,48 @@ class Attack extends Component {
     let { prime, generator } = this.props.appState;
     let a_pvk = getPrivateKey();
     let b_pvk = getPrivateKey();
+    let a_puk = calculateKey(generator, a_pvk, prime);
+    let b_puk = calculateKey(generator, b_pvk, prime);
 
-    this.setState((state, props) => {
-      return {
-        alice: { ...state.alice, private: a_pvk, public: getPublicKey(generator, a_pvk, prime) },
-        bob: { ...state.bob, private: b_pvk, public: getPublicKey(generator, b_pvk, prime) },
-      };
-    });
+    this.setState({ a_pvk: a_pvk, b_pvk: b_pvk, a_puk: a_puk, b_puk: b_puk });
 
-    console.log('state', this.state);
+    return { a_pvk: a_pvk, b_pvk: b_pvk, a_puk: a_puk, b_puk: b_puk };
   }
 
-  intercept = async (what, appState) => {
+  intercept = async (what) => {
+    let { appState } = this.props;
+    console.log('run intercept for ', what);
     if (what === 'prime,gen') {
-      await this.addDelay(2000);
-      this.welcomeAppend(`Intercepted Prime: ${appState.prime}\n`);
-      await this.addDelay(2000);
-      this.welcomeAppend(`Intercepted Generator: ${appState.generator}\n\n`);
-      await this.addDelay(3000);
-      this.welcomeAppend(`Generating False Keys for both parties...\n`);
+      this.enque(`Intercepted Prime: ${appState.prime}\n`, 1000);
+      this.enque(`Intercepted Generator: ${appState.generator}\n\n`, 1000);
+      this.enque(`Generating False Keys for both parties...\n\n`, 1000);
 
       if (Object.keys(appState.sessions).length > 2) {
-        this.intercept('pp_keys', appState);
+        this.intercept('pp_keys');
       } else {
-        await this.addDelay(1000);
-        this.welcomeAppend(`Waiting for both parties...\n`);
+        // this.enque(`Waiting for both parties...\n\n`, 1000);
       }
 
     } else if (what === 'pp_keys') {
-      this.generateTheirKeys();
-      await this.addDelay(1000);
-      this.welcomeAppend(`${getAliceName(appState)}'s Private Key: ${this.state.alice.private} Public Key: ${this.state.alice.public} \n`);
-      await this.addDelay(1000);
-      this.welcomeAppend(`${getBobName(appState)}'s Private Key: ${this.state.bob.private} Public Key: ${this.state.bob.public} \n\n`);
-      await this.addDelay(1000);
-      this.welcomeAppend(`Waiting on public key exchange...\n`);
+      let { a_pvk, b_pvk, a_puk, b_puk } = this.generateTheirKeys();
+      this.enque(`${getAliceName(appState)}'s False Private Key: ${a_pvk} Public Key: ${a_puk} \n`, 1000);
+      this.enque(`${getBobName(appState)}'s False Private Key: ${b_pvk} Public Key: ${b_puk} \n\n`, 1000);
+      this.enque(`Waiting on public key exchange...\n\n`);
+
+    } else if (what === 'mitma_a_puk') {
+      let a_secret = calculateKey(appState.mitma_a_puk, this.state.a_pvk, appState.prime);
+      this.setState({ a_secret: a_secret});
+      this.enque(`Intercepted ${getAliceName(appState)}'s Public Key: ${appState.mitma_a_puk}\n`, 1000);
+      this.enque(`Replied to ${getAliceName(appState)} with Fake Public Key: ${this.state.a_puk}\n`, 1000);
+      this.enque(`Established Shared Secret Key with ${getAliceName(appState)} : ${a_secret}\n\n`, 1000);
+
+    } else if (what === 'mitma_b_puk') {
+      let b_secret = calculateKey(appState.mitma_b_puk, this.state.b_pvk, appState.prime);
+      this.setState({ b_secret: b_secret});
+      this.enque(`Intercepted ${getBobName(appState)}'s Public Key: ${appState.mitma_b_puk}\n`, 1000);
+      this.enque(`Replied to ${getBobName(appState)} with Fake Public Key: ${this.state.b_puk}\n`, 1000);
+      this.enque(`Established Shared Secret Key with ${getBobName(appState)} : ${b_secret}\n\n`, 1000);
+
     }
   }
 
@@ -162,20 +125,30 @@ class Attack extends Component {
     if (appState !== prevProps.appState) {
       if (appState.prime !== prevProps.appState.prime) {
         console.log('componentDidUpdate prime');
-        this.clearDelay();
-        setTimeout(() => {
-          this.enableDelay();
-          this.intercept('prime,gen', appState);
-        }, 1000);
+        this.intercept('prime,gen', appState);
 
       } else if (Object.keys(appState.sessions).length > 2 && appState.sessions !== prevProps.appState.sessions) {
         console.log('componentDidUpdate sessions');
-        this.clearDelay();
-        setTimeout(() => {
-          this.enableDelay();
-          this.intercept('pp_keys,gen', appState);
-        }, 2000);
+        this.intercept('pp_keys', appState);
 
+      } else if (appState.mitma_a_puk !== prevProps.appState.mitma_a_puk) {
+        console.log('componentDidUpdate mitma_a_puk');
+        this.intercept('mitma_a_puk', appState);
+        this.props.socket.emit('execute', {
+          action: 'setTheirPublicKey',
+          mode: 'direct',
+          receiver: appState.socketIds[0],
+          body: { publicKey: this.state.a_puk, sender: null }
+        });
+      } else if (appState.mitma_b_puk !== prevProps.appState.mitma_b_puk) {
+        console.log('componentDidUpdate mitma_b_puk');
+        this.intercept('mitma_b_puk', appState);
+        this.props.socket.emit('execute', {
+          action: 'setTheirPublicKey',
+          mode: 'direct',
+          receiver: appState.socketIds[1],
+          body: { publicKey: this.state.b_puk, sender: null }
+        });
       }
     }
   }
