@@ -22,7 +22,7 @@ class ScreenLoader extends Component {
     let screen = null;
     let minClients = mitma ? 3 : 2;
     
-    if (socketIds && socketIds.length > minClients) {
+    if (socketIds && (socketIds.length > minClients) && (socketIds.indexOf(socketId) >= (minClients))) {
       screen = 'Maximum numer of ' + minClients + ' Session exceeded in ' + (mitma ? 'MITMA' : 'Normal') + ' mode';
     } else if (mitma && isEve(appState) && name) {
       screen = <Attack socket={socket} appState={appState} setRootState={setRootState} />

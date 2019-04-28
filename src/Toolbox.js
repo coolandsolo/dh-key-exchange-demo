@@ -1,4 +1,5 @@
 import bigInt from 'big-integer';
+import CryptoJS from "crypto-js";
 
 export const getReceiver = (state) => {
   let i = state.mitma ? 2 : (
@@ -28,4 +29,13 @@ export const getAliceName = (state) => {
 
 export const getBobName = (state) => {
   return state.sessions[state.socketIds[1]];
+};
+
+export const encrypt = (plainText, secret) => {
+  return CryptoJS.AES.encrypt(plainText, bigInt(secret).toString(16)).toString();
+};
+
+export const decrypt = (cipherText, secret) => {
+  var bytes = CryptoJS.AES.decrypt(cipherText, bigInt(secret).toString(16));
+  return bytes.toString(CryptoJS.enc.Utf8);
 };

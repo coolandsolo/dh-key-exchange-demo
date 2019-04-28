@@ -3,6 +3,10 @@ import './App.css';
 import ButtonAppBar from './layout/partials/ButtonAppBar';
 import SettingsDrawer from './layout/partials/SettingsDrawer';
 import ScreenLoader from './ScreenLoader';
+import Chip from '@material-ui/core/Chip';
+import FaceIcon from '@material-ui/icons/Face';
+import Avatar from '@material-ui/core/Avatar';
+import Grid from '@material-ui/core/Grid';
 
 class App extends Component {
 
@@ -26,6 +30,8 @@ class App extends Component {
       mitma_b_puk: 0,
       mitma_a_pvk: 0,
       mitma_b_pvk: 0,
+      mitma_a_lastReceived: '',
+      mitma_b_lastReceived: '',
       secretKey: 0,
       demoSend: 0,
       aes: false,
@@ -47,13 +53,25 @@ class App extends Component {
   render() {
     return (
       <div className="App">
-        <ButtonAppBar socket={this.socket} setRootState={this.setRootState} appState={this.state}></ButtonAppBar>
+        <Grid container direction="row" justify="flex-end" alignItems="center">
+          <Grid item xs={12} align="left">
+            <ButtonAppBar socket={this.socket} setRootState={this.setRootState} appState={this.state}></ButtonAppBar>
+          </Grid>
+
+          <Grid item xs={6} align="left" style={{ paddingLeft: 20, paddingTop: 20 }}>{this.state.secretKey ? ' Secret Key: ' + this.state.secretKey : ''}</Grid>
+          <Grid item xs={6} align="right" style={{ paddingRight: 20, paddingTop: 20 }}>
+            {this.state.name ? <Chip avatar={<Avatar><FaceIcon /></Avatar>} label={this.state.name} color="secondary" /> : null}
+          </Grid>
+
+          <Grid item xs={12} align="left">
+            <ScreenLoader socket={this.socket} appState={this.state} setRootState={this.setRootState} />
+          </Grid>
+
+        </Grid>
 
         <SettingsDrawer socket={this.socket} drawerState={this.state.drawer} setRootState={this.setRootState} mitmaState={this.state.mitma} aesState={this.state.aes}
           primeSize={this.state.primeSize}
         />
-
-        <ScreenLoader socket={this.socket} appState={this.state} setRootState={this.setRootState} />
       </div>
     );
   }

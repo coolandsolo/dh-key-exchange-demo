@@ -4,7 +4,7 @@ import Typography from '@material-ui/core/Typography';
 import { withTheme } from '@material-ui/core/styles'
 import Paper from '@material-ui/core/Paper';
 import Console from 'react-console-component';
-import { getPrivateKey, calculateKey, getAliceName, getBobName } from '../../Toolbox';
+import { getPrivateKey, calculateKey, getAliceName, getBobName, encrypt, decrypt } from '../../Toolbox';
 import queue from 'async-delay-queue';
 
 class Attack extends Component {
@@ -105,17 +105,35 @@ class Attack extends Component {
 
     } else if (what === 'mitma_a_puk') {
       let a_secret = calculateKey(appState.mitma_a_puk, this.state.a_pvk, appState.prime);
-      this.setState({ a_secret: a_secret});
+      this.setState({ a_secret: a_secret });
       this.enque(`Intercepted ${getAliceName(appState)}'s Public Key: ${appState.mitma_a_puk}\n`, 1000);
       this.enque(`Replied to ${getAliceName(appState)} with Fake Public Key: ${this.state.a_puk}\n`, 1000);
       this.enque(`Established Shared Secret Key with ${getAliceName(appState)} : ${a_secret}\n\n`, 1000);
 
     } else if (what === 'mitma_b_puk') {
       let b_secret = calculateKey(appState.mitma_b_puk, this.state.b_pvk, appState.prime);
-      this.setState({ b_secret: b_secret});
+      this.setState({ b_secret: b_secret });
       this.enque(`Intercepted ${getBobName(appState)}'s Public Key: ${appState.mitma_b_puk}\n`, 1000);
       this.enque(`Replied to ${getBobName(appState)} with Fake Public Key: ${this.state.b_puk}\n`, 1000);
       this.enque(`Established Shared Secret Key with ${getBobName(appState)} : ${b_secret}\n\n`, 1000);
+
+    } else if (what === 'mitma_a_lastReceived') {
+      let a_decrypt = decrypt(appState.mitma_a_lastReceived, this.state.a_secret);
+      let b_message = encrypt(a_decrypt, this.state.b_secret);
+      this.props.socket.emit('execute', { action: 'setMessage', mode: 'direct', receiver: appState.socketIds[1], body: { message: b_message, sender: null } });
+      this.enque(`Intercepted ${getAliceName(appState)}'s Ecrypted Message: [${appState.mitma_a_lastReceived}]\n`, 500);
+      this.enque(`Decrypted ${getAliceName(appState)}'s Message: [${a_decrypt}]\n`, 500);
+      this.enque(`Encrypting ${getAliceName(appState)}'s Message with  ${getBobName(appState)}'s Secret Key: [${b_message}]\n`, 500);
+      this.enque(`New Message Sent to ${getBobName(appState)}!\n\n`, 500);
+
+    } else if (what === 'mitma_b_lastReceived') {
+      let b_decrypt = decrypt(appState.mitma_b_lastReceived, this.state.b_secret);
+      let a_message = encrypt(b_decrypt, this.state.a_secret);
+      this.props.socket.emit('execute', { action: 'setMessage', mode: 'direct', receiver: appState.socketIds[0], body: { message: a_message, sender: null } });
+      this.enque(`Intercepted ${getBobName(appState)}'s Ecrypted Message: [${appState.mitma_b_lastReceived}]\n`, 500);
+      this.enque(`Decrypted ${getBobName(appState)}'s Message: [${b_decrypt}]\n`, 500);
+      this.enque(`Encrypting ${getBobName(appState)}'s Message with  ${getAliceName(appState)}'s Secret Key: [${a_message}]\n`, 500);
+      this.enque(`New Message Sent to ${getAliceName(appState)}!\n\n`, 500);
 
     }
   }
@@ -149,6 +167,14 @@ class Attack extends Component {
           receiver: appState.socketIds[1],
           body: { publicKey: this.state.b_puk, sender: null }
         });
+      } else if (appState.mitma_a_lastReceived !== prevProps.appState.mitma_a_lastReceived) {
+        console.log('componentDidUpdate mitma_a_lastReceived');
+        this.intercept('mitma_a_lastReceived', appState);
+
+      } else if (appState.mitma_b_lastReceived !== prevProps.appState.mitma_b_lastReceived) {
+        console.log('componentDidUpdate mitma_b_lastReceived');
+        this.intercept('mitma_b_lastReceived', appState);
+
       }
     }
   }

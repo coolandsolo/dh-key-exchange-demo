@@ -8,8 +8,8 @@ import CardContent from '@material-ui/core/CardContent';
 import IconButton from '@material-ui/core/IconButton';
 import EncIcon from '@material-ui/icons/EnhancedEncryption';
 import DecIcon from '@material-ui/icons/NoEncryption';
-import bigInt from 'big-integer';
-import CryptoJS from "crypto-js";
+import { encrypt, decrypt } from '../../Toolbox';
+
 const styles = {
   card: {
     width: '80%',
@@ -32,11 +32,10 @@ class Message extends Component {
   toggleEnc = (action) => {
     const { message, encrypted, appState } = this.props;
     if (encrypted && !this.state.content) {
-      var bytes = CryptoJS.AES.decrypt(message, bigInt(appState.secretKey).toString(16));
-      var plaintext = bytes.toString(CryptoJS.enc.Utf8);
+      let plaintext = decrypt(message, appState.secretKey);
       this.setState({ content: plaintext });
     } else if (!encrypted && !this.state.content) {
-      let ciphertext = CryptoJS.AES.encrypt(message, bigInt(appState.secretKey).toString(16)).toString();
+      let ciphertext = encrypt(message, appState.secretKey);
       this.setState({ content: ciphertext });
     } else {
       this.setState({ content: false });
@@ -46,7 +45,7 @@ class Message extends Component {
   render() {
     const { message, sent, classes } = this.props;
     return (
-      <Card raised={true} className={classes.card} align="left">
+      <Card raised={true} className={classes.card} align="left" style={sent ? {} :{marginLeft:100}}>
         <CardContent>
           <Typography color="textSecondary" gutterBottom>{sent ? 'Sent' : 'Received'}:</Typography>
           <Typography component="p">{this.state.content ? this.state.content : message}</Typography>

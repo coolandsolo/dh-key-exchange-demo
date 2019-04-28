@@ -30,7 +30,7 @@ class SendEncrypt extends Component {
     this.state = {
       secret: 0,
       demo: false,
-      message: 'sdrf',
+      message: '',
       history: [],
     }
   }
@@ -38,41 +38,45 @@ class SendEncrypt extends Component {
   state = {
   };
 
-  handleChange = name => event => {
-    this.setState({ [name]: event.target.value });
+  handleType = event => {
+    this.setState({ message: event.target.value });
   };
 
   componentDidUpdate(prevProps) {
     let { appState } = this.props;
     // Typical usage (don't forget to compare props):
     if (appState.lastReceived !== prevProps.appState.lastReceived) {
-      this.setState({ history: [{ message: appState.lastReceived, encrypted: true, sent: false }, ...this.state.history] });
+      console.log('appState.lastReceived', appState.lastReceived);
+      this.setState({ history: [...this.state.history, { message: appState.lastReceived, encrypted: true, sent: false }] });
     }
   }
 
   sendEncrypted = () => {
-    let { socket, appState } = this.props;
-    console.log('data appState', appState);
-    this.setState({ history: [{ message: this.state.message, encrypted: false, sent: true }, ...this.state.history] });
+    if (this.state.message) {
+      let { socket, appState } = this.props;
+      console.log('data appState', appState);
+      this.setState({ history: [...this.state.history, { message: this.state.message, encrypted: false, sent: true }] });
 
-    let receiver = getReceiver(appState);
-    let ciphertext = CryptoJS.AES.encrypt(this.state.message, bigInt(appState.secretKey).toString(16)).toString();
-    console.log('ciphertext', ciphertext, ciphertext.toString());
-    socket.emit('execute', {
-      action: 'setMessage',
-      mode: 'direct',
-      receiver: receiver,
-      body: { message: ciphertext, sender: appState.socketId }
-    });
+      let receiver = getReceiver(appState);
+      let ciphertext = CryptoJS.AES.encrypt(this.state.message, bigInt(appState.secretKey).toString(16)).toString();
+      console.log('ciphertext', ciphertext, ciphertext.toString());
+      socket.emit('execute', {
+        action: 'setMessage',
+        mode: 'direct',
+        receiver: receiver,
+        body: { message: ciphertext, sender: appState.socketId }
+      });
+
+      this.setState({ message: '' });
+    }
   }
 
   render() {
     const { classes, appState } = this.props;
     var messages = [];
-    this.state.history.forEach(message => {
-      console.log('message', message);
+    this.state.history.forEach((message, index) => {
       if (message.message) {
-        messages.push(<Message encrypted={message.encrypted} sent={message.sent} message={message.message} appState={appState} />)
+        messages.push(<Message key={index} encrypted={message.encrypted} sent={message.sent} message={message.message} appState={appState} />)
       }
     });
 
@@ -86,7 +90,7 @@ class SendEncrypt extends Component {
           multiline
           rows="2"
           value={this.state.message}
-          onChange={this.handleChange('message')}
+          onChange={this.handleType}
           className={classes.text}
           margin="normal"
         />
@@ -95,7 +99,7 @@ class SendEncrypt extends Component {
           {this.state.demo ? 'Waiting on them...' : 'Send'}
         </Button>
 
-        {messages.length ? messages : null}
+        {messages.length ? messages.reverse() : null}
 
       </div >
     );

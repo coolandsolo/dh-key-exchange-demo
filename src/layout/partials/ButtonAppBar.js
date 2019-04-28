@@ -7,10 +7,6 @@ import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';
 import IconButton from '@material-ui/core/IconButton';
 import MenuIcon from '@material-ui/icons/Menu';
-import Chip from '@material-ui/core/Chip';
-import FaceIcon from '@material-ui/icons/Face';
-import Avatar from '@material-ui/core/Avatar';
-import Grid from '@material-ui/core/Grid';
 
 const styles = {
   chip: {
@@ -54,16 +50,6 @@ function ButtonAppBar(props) {
         </Toolbar>
       </AppBar>
 
-      <Grid container direction="row" justify="flex-end" alignItems="center" className={classes.chip}>
-        <Grid item>
-          {appState && appState.name ?
-            <Chip
-              avatar={<Avatar><FaceIcon /></Avatar>}
-              label={appState.name}
-              color="secondary"
-            /> : null}
-        </Grid>
-      </Grid>
     </div>
   );
 }
